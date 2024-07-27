@@ -1,0 +1,27 @@
+# clang-format -style=file -i *.cpp
+
+BasedOnStyle: LLVM
+ColumnLimit: 100
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AlignTrailingComments: true
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: true
+PointerAlignment: Left
+BreakBeforeBraces: Attach
+NamespaceIndentation: None
+IncludeBlocks: Preserve
+SpaceBeforeAssignmentOperators: true
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+Cpp11BracedListStyle: true
+DerivePointerAlignment: true
+AllowShortLambdasOnASingleLine: true
+AlwaysBreakBeforeMultilineStrings: false
+ReflowComments: true
+SortIncludes: true
+SortUsingDeclarations: true

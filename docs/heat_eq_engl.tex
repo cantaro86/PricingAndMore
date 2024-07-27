@@ -1,0 +1,208 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+
+
+\begin{document}
+
+Discretizing the heat equation using the finite element method (FEM) involves several key steps. Let's go through the process systematically. The heat equation in one spatial dimension \(x\) and time \(t\) can be written as:
+
+\[
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial x^2}
+\]
+
+where \(u(x,t)\) is the temperature distribution and \(\alpha\) is the thermal diffusivity.
+
+\section*{Steps to Discretize the Heat Equation Using FEM}
+
+\subsection*{1. Weak Formulation}
+Convert the heat equation into its weak form. Multiply the equation by a test function \(v\) and integrate over the domain \(\Omega\):
+
+\[
+\int_{\Omega} v \frac{\partial u}{\partial t} \, dx = \alpha \int{\Omega} v \frac{\partial^2 u}{\partial x^2} \, dx
+\]
+
+Apply integration by parts to the right-hand side to reduce the order of the derivative:
+
+\[
+\int_{\Omega} v \frac{\partial u}{\partial t} \, dx = -\alpha \int_{\Omega} \frac{\partial v}{\partial x} \frac{\partial u}{\partial x} \, dx + \alpha \int_{\partial \Omega} v \frac{\partial u}{\partial x} \, ds
+\]
+
+Assuming appropriate boundary conditions (e.g., Dirichlet or Neumann), simplify the boundary term.
+
+\subsection*{2. Spatial Discretization}
+Approximate the solution \(u(x,t)\) and test function \(v(x)\) using finite element basis functions. Suppose \(u(x,t)\) can be approximated as:
+
+\[
+u(x,t) \approx \sum_{j=1}^{N} U_j(t) \phi_j(x)
+\]
+
+where \(\phi_j(x)\) are the basis functions and \(U_j(t)\) are the time-dependent coefficients. Similarly, test function \(v(x)\) is approximated using the same basis functions.
+
+\subsection*{3. Galerkin Method}
+Substitute these approximations into the weak form:
+
+\[
+\int_{\Omega} \phi_i \left( \sum_{j=1}^{N} \dot{U}_j(t) \phi_j \right) \, dx = -\alpha \int_{\Omega} \frac{\partial \phi_i}{\partial x} \frac{\partial}{\partial x} \left( \sum_{j=1}^{N} U_j(t) \phi_j \right) \, dx
+\]
+
+where \(\dot{U}_j(t)\) represents the time derivative of \(U_j(t)\).
+
+\subsection*{4. Matrix Formulation}
+This can be written in matrix form as:
+
+\[
+M \mathbf{\dot{U}} = -\alpha K \mathbf{U}
+\]
+
+where \(M\) is the mass matrix, \(K\) is the stiffness matrix, and \(\mathbf{U}\) is the vector of the coefficients \(U_j(t)\):
+
+\[
+M_{ij} = \int_{\Omega} \phi_i \phi_j \, dx
+\]
+
+\[
+K_{ij} = \int_{\Omega} \frac{\partial \phi_i}{\partial x} \frac{\partial \phi_j}{\partial x} \, dx
+\]
+
+\subsection*{5. Time Discretization}
+Use a suitable time-stepping method, such as the backward Euler method or Crank-Nicolson method, to discretize the time derivative. For example, with backward Euler:
+
+\[
+M \frac{\mathbf{U}^{n+1} - \mathbf{U}^n}{\Delta t} = -\alpha K \mathbf{U}^{n+1}
+\]
+
+Rearrange to solve for \(\mathbf{U}^{n+1}\):
+
+\[
+\left( M + \alpha \Delta t K \right) \mathbf{U}^{n+1} = M \mathbf{U}^n
+\]
+
+\subsection*{6. Solve the System}
+Solve the linear system at each time step to find \(\mathbf{U}^{n+1}\):
+
+\[
+\mathbf{U}^{n+1} = \left( M + \alpha \Delta t K \right)^{-1} M \mathbf{U}^n
+\]
+
+\section*{Summary}
+\begin{enumerate}
+    \item Formulate the weak form of the heat equation.
+    \item Choose appropriate basis functions and approximate the solution.
+    \item Formulate the Galerkin method to obtain the mass and stiffness matrices.
+    \item Discretize in time using a suitable method.
+    \item Solve the resulting linear system at each time step.
+\end{enumerate}
+
+By following these steps, you can discretize the heat equation using the finite element method and solve for the temperature distribution over time.
+
+
+\section*{Matrices derivation}
+
+When using piecewise linear basis functions (also known as linear hat functions) for the finite element method, the expressions for the mass matrix \(M\) and stiffness matrix \(K\) can be derived explicitly. Let's assume we have a one-dimensional domain \([0, L]\) discretized into \(N\) elements with nodes \(x_1, x_2, \ldots, x_{N+1}\).
+
+\section*{Basis Functions}
+The piecewise linear basis functions \(\phi_i(x)\) are defined such that \(\phi_i(x_j) = \delta_{ij}\), meaning \(\phi_i(x)\) is 1 at node \(i\) and 0 at all other nodes. For node \(i\), the basis function \(\phi_i(x)\) is given by:
+
+\[
+\phi_i(x) = 
+\begin{cases}
+\frac{x - x_{i-1}}{h} & \text{if } x_{i-1} \leq x \leq x_i \\
+\frac{x_{i+1} - x}{h} & \text{if } x_i \leq x \leq x_{i+1} \\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+where \(h = x_{i+1} - x_i\) is the length of each element, assuming uniform spacing for simplicity.
+
+\section*{Mass Matrix \(M\)}
+The mass matrix \(M\) is defined by:
+
+\[
+M_{ij} = \int_{\Omega} \phi_i(x) \phi_j(x) \, dx
+\]
+
+For piecewise linear basis functions, the entries of \(M\) are:
+
+\[
+M_{ii} = \int_{x_{i-1}}^{x_{i+1}} \phi_i^2(x) \, dx = \frac{2h}{6} = \frac{h}{3}
+\]
+
+\[
+M_{i,i+1} = M_{i+1,i} = \int_{x_i}^{x_{i+1}} \phi_i(x) \phi_{i+1}(x) \, dx = \frac{h}{6}
+\]
+
+Therefore, the mass matrix \(M\) for an \(N+1\) node system is tridiagonal and looks like:
+
+\[
+M = \frac{h}{6}
+\begin{bmatrix}
+2 & 1 & 0 & \cdots & 0 \\
+1 & 4 & 1 & \cdots & 0 \\
+0 & 1 & 4 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & 1 \\
+0 & 0 & 0 & 1 & 2
+\end{bmatrix}
+\]
+
+\section*{Stiffness Matrix \(K\)}
+The stiffness matrix \(K\) is defined by:
+
+\[
+K_{ij} = \int_{\Omega} \frac{\partial \phi_i}{\partial x} \frac{\partial \phi_j}{\partial x} \, dx
+\]
+
+For piecewise linear basis functions, the entries of \(K\) are:
+
+\[
+K_{ii} = \int_{x_{i-1}}^{x_i} \left( \frac{\partial \phi_i}{\partial x} \right)^2 dx + \int_{x_i}^{x_{i+1}} \left( \frac{\partial \phi_i}{\partial x} \right)^2 dx = \frac{1}{h} + \frac{1}{h} = \frac{2}{h}
+\]
+
+\[
+K_{i,i+1} = K_{i+1,i} = \int_{x_i}^{x_{i+1}} \left( \frac{\partial \phi_i}{\partial x} \right) \left( \frac{\partial \phi_{i+1}}{\partial x} \right) dx = -\frac{1}{h}
+\]
+
+Therefore, the stiffness matrix \(K\) for an \(N+1\) node system is also tridiagonal and looks like:
+
+\[
+K = \frac{1}{h}
+\begin{bmatrix}
+1 & -1 & 0 & \cdots & 0 \\
+-1 & 2 & -1 & \cdots & 0 \\
+0 & -1 & 2 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & -1 \\
+0 & 0 & 0 & -1 & 1
+\end{bmatrix}
+\]
+
+\section*{Summary}
+The mass matrix \(M\) and the stiffness matrix \(K\) using piecewise linear basis functions are:
+
+\[
+M = \frac{h}{6}
+\begin{bmatrix}
+2 & 1 & 0 & \cdots & 0 \\
+1 & 4 & 1 & \cdots & 0 \\
+0 & 1 & 4 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & 1 \\
+0 & 0 & 0 & 1 & 2
+\end{bmatrix}
+\]
+
+\[
+K = \frac{1}{h}
+\begin{bmatrix}
+1 & -1 & 0 & \cdots & 0 \\
+-1 & 2 & -1 & \cdots & 0 \\
+0 & -1 & 2 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & -1 \\
+0 & 0 & 0 & -1 & 1
+\end{bmatrix}
+\]
+
+These matrices form the basis of the finite element discretization of the heat equation.
+
+\end{document}
+
