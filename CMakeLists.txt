@@ -55,7 +55,7 @@ if (NOT Catch2_FOUND)
     FetchContent_MakeAvailable(catch)
     find_package(Catch2 REQUIRED)
 endif()
-
+include_directories(${catch2_SOURCE_DIR}/include)
 
 enable_testing()
 include(CTest)
