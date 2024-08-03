@@ -53,9 +53,11 @@ if (NOT Catch2_FOUND)
         GIT_TAG v3.6.0
     )
     FetchContent_MakeAvailable(catch)
+    message(STATUS "Catch2 path: ${catch2_SOURCE_DIR}")
     find_package(Catch2 REQUIRED)
 endif()
 include_directories(${catch2_SOURCE_DIR}/include)
+# list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
 
 enable_testing()
 include(CTest)
