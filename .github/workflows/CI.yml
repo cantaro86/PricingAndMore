@@ -8,6 +8,11 @@ on:
   workflow_dispatch:
 
 
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: CI
+
+
 jobs:
   build:
 
@@ -16,23 +21,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Set up CMake
-      uses: actions/setup-cmake@v3
-
-    - name: Set up compiler
-      uses: actions/setup-gcc@v1
-      with:
-        version: 'latest'
+    
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=CI -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
-        cmake --build .
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Run tests
-      run: |
-        cd build
-        ctest --output-on-failure
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
