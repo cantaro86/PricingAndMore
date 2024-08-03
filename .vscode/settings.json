@@ -68,5 +68,39 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "format": "cpp"
+    },
+    "cmake.defaultVariants": {
+        "buildType": {
+            "default": "CI",
+            "description": "The build type.",
+            "choices": {
+                "debug": {
+                    "short": "Debug",
+                    "long": "Disable optimizations - include debug information.",
+                    "buildType": "Debug"
+                },
+                "release": {
+                    "short": "Release",
+                    "long": "Optimize for speed - exclude debug information.",
+                    "buildType": "Release"
+                },
+                "minsize": {
+                    "short": "MinSizeRel",
+                    "long": "Optimize for smallest binary size - exclude debug information.",
+                    "buildType": "MinSizeRel"
+                },
+                "reldeb": {
+                    "short": "RelWithDebInfo",
+                    "long": "Optimize for speed - include debug information.",
+                    "buildType": "RelWithDebInfo"
+                },
+                "CI": {
+                    "short": "CI",
+                    "long": "Optimize speed - debug - all checks for warnings.",
+                    "buildType": "CI"
+                }
+
+            }
+        }
     }
 }
