@@ -61,7 +61,7 @@ if (NOT Catch2_FOUND)
     # endif()
     # /home/runner/work/PricingAndMore/PricingAndMore/build/_deps/catch2-src
     message(STATUS "Catch2 path: ${catch2_SOURCE_DIR}")
-    find_package(Catch2 REQUIRED)
+    # find_package(Catch2 REQUIRED)
 endif()
 # include_directories(${catch2_SOURCE_DIR}/include)
 # list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
