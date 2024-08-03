@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      uses: actions/setup-cmake@v3
+
+    - name: Set up compiler
+      uses: actions/setup-gcc@v1
+      with:
+        version: 'latest'
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=CI -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
+        cmake --build .
+
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure
