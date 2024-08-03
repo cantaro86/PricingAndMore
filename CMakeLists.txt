@@ -54,16 +54,16 @@ if (NOT Catch2_FOUND)
     )
     FetchContent_MakeAvailable(catch2)
     
-    FetchContent_GetProperties(Catch2)  
-    if(NOT Catch2_POPULATED)
-        FetchContent_Populate(Catch2)
-        add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-    endif()
-
+    # FetchContent_GetProperties(Catch2)  
+    # if(NOT Catch2_POPULATED)
+    #     FetchContent_Populate(Catch2)
+    #     add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
+    # endif()
+    # /home/runner/work/PricingAndMore/PricingAndMore/build/_deps/catch2-src
     message(STATUS "Catch2 path: ${catch2_SOURCE_DIR}")
     find_package(Catch2 REQUIRED)
 endif()
-include_directories(${catch2_SOURCE_DIR}/include)
+# include_directories(${catch2_SOURCE_DIR}/include)
 # list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
 
 enable_testing()
