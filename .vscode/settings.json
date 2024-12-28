@@ -102,5 +102,6 @@
 
             }
         }
-    }
+    },
+    "C_Cpp.default.compilerPath": "/opt/homebrew/opt/llvm/bin/clang++"
 }

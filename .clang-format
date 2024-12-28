@@ -9,7 +9,17 @@ AlignTrailingComments: true
 SpaceBeforeParens: ControlStatements
 SpaceAfterCStyleCast: true
 PointerAlignment: Left
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterControlStatement: false
+  AfterFunction: false
+  AfterClass: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterEnum: false
+  AfterNamespace: false
+  BeforeElse: true
+  BeforeCatch: true
 NamespaceIndentation: None
 IncludeBlocks: Preserve
 SpaceBeforeAssignmentOperators: true

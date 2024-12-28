@@ -1,11 +1,9 @@
 #include "Fibonacci.hpp"
-#include <limits>
 #include <climits>
-#include <complex>
 #include <cmath>
+#include <complex>
+#include <limits>
 #include <numbers>
-
-
 
 unsigned long fibonacci(unsigned long n) {
 
@@ -26,13 +24,14 @@ unsigned long fibonacci(unsigned long n) {
     return c;
 }
 
-unsigned long fib_closed(unsigned long n){
+unsigned long fib_closed(unsigned long n) {
 
     using namespace std;
     using namespace numbers;
     using namespace literals::complex_literals;
 
-    auto fib = 2.0 / (sqrt(5) * pow(n, 1i) ) * sinh( static_cast<double>(n) * log(1i * phi_v<double>) );
+    auto fib =
+        2.0 / (sqrt(5) * pow(n, 1i)) * sinh(static_cast<double>(n) * log(1i * phi_v<double>));
 
     double result = std::round(std::abs(fib));
 
@@ -42,4 +41,3 @@ unsigned long fib_closed(unsigned long n){
 
     return static_cast<unsigned long>(result);
 }
-

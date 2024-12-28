@@ -21,7 +21,8 @@ double BinaryPricer::price(double spot, std::string method, std::string type, st
     if (method == "closed") {
         if (expiry != "European") {
             throw std::runtime_error("expiry must be European when pricing with closed formula.");
-        } else
+        }
+        else
             return closed_formula(spot, type);
     }
 
@@ -68,7 +69,8 @@ double BinaryPricer::MC_EU(double S0, std::string type, int num_simulations,
         double S_T = S0 * std::exp((r - 0.5 * sig * sig) * T + sig * std::sqrt(T) * N(gen));
         if (type == "call") {
             payoff_sum += (S_T > K) ? 1.0 : 0.0;
-        } else {
+        }
+        else {
             payoff_sum += (S_T <= K) ? 1.0 : 0.0;
         }
     }
@@ -89,7 +91,8 @@ double BinaryPricer::MC_AM(double S0, std::string type, int numPaths, int numSte
     for (int i = 0; i < numPaths; ++i) {
         if (type == "call") {
             cashFlows[i] = paths[i].back() > K ? 1.0 : 0.0;
-        } else {
+        }
+        else {
             cashFlows[i] = paths[i].back() <= K ? 1.0 : 0.0;
         }
     }
@@ -113,10 +116,12 @@ double BinaryPricer::MC_AM(double S0, std::string type, int numPaths, int numSte
                     double continuationValue = beta0 + beta1 * paths[i][step];
                     if (1.0 > continuationValue) { // 1.0 is the intrinsic value
                         cashFlows[i] = 1.0;        // optimal to excercise
-                    } else {
+                    }
+                    else {
                         cashFlows[i] = std::exp(-r * dt) * cashFlows[i]; // optimal to wait
                     }
-                } else {
+                }
+                else {
                     cashFlows[i] = std::exp(-r * dt) * cashFlows[i];
                 }
             }
@@ -162,7 +167,8 @@ double BinaryPricer::FDM(double S0, std::string type, std::string expiry, const 
         for (int j = 0; j < Nspace; ++j) {
             Payoff[j] = (std::exp(x[j]) > K) ? 1.0 : 0.0;
         }
-    } else {
+    }
+    else {
         for (int j = 0; j < Nspace; ++j) {
             Payoff[j] = (std::exp(x[j]) <= K) ? 1.0 : 0.0;
         }
@@ -210,7 +216,8 @@ double BinaryPricer::FEM(double S0, std::string type, std::string expiry, const 
     int N; // number of finite elements
     if (Nspace % 2 == 0) {
         N = Nspace;
-    } else {
+    }
+    else {
         N = Nspace - 1;
     }
 
@@ -268,7 +275,8 @@ double BinaryPricer::FEM(double S0, std::string type, std::string expiry, const 
                     1 / K *
                     std::exp(0.5 * (a - 1) * x[i]); // Transformed initial boundary condition
         }
-    } else {
+    }
+    else {
         for (int i = 0; i <= N; ++i) {
             if (x[i] > 0)
                 Payoff[i] = 0;
@@ -300,7 +308,8 @@ double BinaryPricer::FEM(double S0, std::string type, std::string expiry, const 
         if (type == "call") {
             u[0] = 0;
             u[N] = BC(t, x_max, K);
-        } else {
+        }
+        else {
             u[0] = BC(t, x_min, K);
             u[N] = 0;
         }
@@ -318,7 +327,8 @@ double BinaryPricer::FEM(double S0, std::string type, std::string expiry, const 
                     std::exp(0.25 * (a + 1) * (a + 1) * dt); // Transformed Payoff is time dependent
             }
             u = maximum(TDMA(aa, bb, cc, b), Payoff);
-        } else
+        }
+        else
             u = TDMA(aa, bb, cc, b);
 
         t += dt;

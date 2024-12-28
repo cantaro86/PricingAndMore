@@ -6,9 +6,9 @@ Created on Jul 17 2024
 #include "BinaryPricer.hpp"
 
 int main() {
-    double strike     = 100.0;
-    double maturity   = 1.0; // 1 year
-    double rate       = 0.1; // 10% interest rate
+    double strike = 100.0;
+    double maturity = 1.0;   // 1 year
+    double rate = 0.1;       // 10% interest rate
     double volatility = 0.2; // 20% volatility
 
     BinaryPricer pricer(strike, maturity, rate, volatility);
@@ -49,9 +49,11 @@ int main() {
         std::cout << "AM FEM call: " << optionPrice69 << std::endl;
         double optionPrice70 = pricer.price(spot, "FEM", "put", "American");
         std::cout << "AM FEM put: " << optionPrice70 << std::endl;
-    } catch (const std::runtime_error& e) {
+    }
+    catch (const std::runtime_error& e) {
         std::cerr << "Error: " << e.what() << std::endl;
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 
