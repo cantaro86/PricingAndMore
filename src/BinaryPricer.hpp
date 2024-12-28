@@ -61,4 +61,4 @@ class BinaryPricer {
     double sig; // volatility
 };
 
-#endif  // BINARYPRICER_HPP
+#endif // BINARYPRICER_HPP

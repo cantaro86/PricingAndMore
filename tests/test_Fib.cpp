@@ -1,7 +1,6 @@
 #include "../src/Fibonacci.hpp"
 #include <catch2/catch_test_macros.hpp>
 
-
 TEST_CASE("Test closed formula for Fibonacci") {
 
     REQUIRE(fib_closed(1) == fibonacci(1));
@@ -19,11 +18,11 @@ TEST_CASE("Test closed formula for Fibonacci") {
 }
 
 TEST_CASE("fib_close throws exception for big number") {
-    
+
     REQUIRE_THROWS_AS(fib_closed(100), std::runtime_error);
 }
 
 TEST_CASE("fibonacci throws exception for big number") {
-    
+
     REQUIRE_THROWS_AS(fibonacci(100), std::runtime_error);
 }

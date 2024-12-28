@@ -16,13 +16,12 @@ class OptionFixture {
     OptionFixture() : pricer(strike, maturity, rate, volatility) {}
 };
 
-
 TEST_CASE_METHOD(OptionFixture, "Test Call") {
     double oPrice = pricer.price(100.0, "closed", "call", "European");
-    REQUIRE_THAT(oPrice,  Catch::Matchers::WithinAbs(0.59305, 0.0001) );
+    REQUIRE_THAT(oPrice, Catch::Matchers::WithinAbs(0.59305, 0.0001));
 }
 
 TEST_CASE_METHOD(OptionFixture, "Test Put") {
     double oPrice = pricer.price(100.0, "closed", "put", "European");
-    REQUIRE_THAT(oPrice,  Catch::Matchers::WithinAbs(0.311787, 0.0001) );
+    REQUIRE_THAT(oPrice, Catch::Matchers::WithinAbs(0.311787, 0.0001));
 }
