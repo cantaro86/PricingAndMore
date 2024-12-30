@@ -45,11 +45,12 @@ jobs:
           key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-external-
-
+      
       - name: Create external directory
         run: mkdir -p ${{github.workspace}}/.external
 
       - name: Configure CMake
+        if: steps.cache-external.outputs.cache-hit != 'true'
         run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DFETCHCONTENT_BASE_DIR=${{github.workspace}}/.external
              # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
       
