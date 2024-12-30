@@ -35,6 +35,17 @@ jobs:
       - name: Install Ninja
         run: sudo apt-get install ninja-build
 
+      - name: Cache external dependencies
+        id: cache-external
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-external
+        with:
+          path: ${{ github.workspace }}/.external
+          key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-external-
+
       - name: Create external directory
         run: mkdir -p ${{github.workspace}}/.external
 
@@ -43,15 +54,8 @@ jobs:
              # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
       
       - name: Build
+        if: steps.cache-external.outputs.cache-hit != 'true'
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j4 
-
-      - name: Cache external dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}/.external
-          key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-external-
 
       - name: Run tests
         working-directory: ${{github.workspace}}/build
