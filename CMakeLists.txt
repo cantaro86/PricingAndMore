@@ -48,6 +48,7 @@ find_package(Catch2 QUIET)
 if (NOT Catch2_FOUND)
     message(STATUS "Catch2 not found, fetching it...")
     include(FetchContent)
+    set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/.external")
     FetchContent_Declare(
         catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
