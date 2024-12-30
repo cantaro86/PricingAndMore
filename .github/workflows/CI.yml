@@ -7,14 +7,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: CI
 
-
 jobs:
-
   format-check:
     runs-on: ubuntu-latest
     steps:
@@ -30,25 +27,32 @@ jobs:
           clang-format -n -Werror -style=file -i src/*.{cpp,hpp} tests/*.cpp
 
   unit-tests:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install Ninja
-      run: sudo apt-get install ninja-build
+      - name: Install Ninja
+        run: sudo apt-get install ninja-build
 
-    - name: Create external directory
-      run: mkdir -p ${{github.workspace}}/.external
+      - name: Cache external dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.external
+          key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-external-
 
-    - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DFETCHCONTENT_BASE_DIR=${{github.workspace}}/.external # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
+      - name: Create external directory
+        run: mkdir -p ${{github.workspace}}/.external
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j4 
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DFETCHCONTENT_BASE_DIR=${{github.workspace}}/.external
+             # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
+      
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j4 
 
-    - name: Run tests
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+      - name: Run tests
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
