@@ -46,6 +46,7 @@ add_executable(Fib src/main_fib.cpp src/Fibonacci.cpp)
 # Add Catch2 as dependency
 find_package(Catch2 QUIET)
 if (NOT Catch2_FOUND)
+    message(STATUS "Catch2 not found, fetching it...")
     include(FetchContent)
     FetchContent_Declare(
         catch2
@@ -53,7 +54,9 @@ if (NOT Catch2_FOUND)
         GIT_TAG v3.6.0
     )
     FetchContent_MakeAvailable(catch2)
-    message(STATUS "Catch2 path: ${catch2_SOURCE_DIR}")
+    message(STATUS "Catch2 install path: ${catch2_SOURCE_DIR}")
+else()
+    message(STATUS "Catch2 FOUND at ${Catch2_DIR}")
 endif()
 
 enable_testing()

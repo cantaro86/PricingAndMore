@@ -103,5 +103,12 @@
             }
         }
     },
-    "C_Cpp.default.compilerPath": "/opt/homebrew/opt/llvm/bin/clang++"
+    "C_Cpp.default.compilerPath": "/opt/homebrew/opt/llvm/bin/clang++",
+    "cmake.generator": "Ninja",
+    "cmake.preferredGenerators": [
+        "Ninja",
+        "Unix Makefiles",
+        "Ninja Multi-Config"
+    ],
+    "cmake.setBuildTypeOnMultiConfig": true
 }

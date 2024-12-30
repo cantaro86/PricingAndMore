@@ -29,20 +29,23 @@ jobs:
         run: |
           clang-format -n -Werror -style=file -i src/*.{cpp,hpp} tests/*.cpp
 
-  # unit-tests:
+  unit-tests:
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v4
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Ninja
+      run: sudo apt-get install ninja-build
     
-  #   - name: Configure CMake
-  #     run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
 
-  #   - name: Build
-  #     run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j4 
 
-  #   - name: Run tests
-  #     working-directory: ${{github.workspace}}/build
-  #     run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+    - name: Run tests
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
