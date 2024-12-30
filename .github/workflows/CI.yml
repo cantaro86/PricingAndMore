@@ -33,12 +33,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Ninja
-        run: sudo apt-get install ninja-build
-
-      - name: Install Catch2
         run: |
           sudo apt-get update
-          sudo apt-get install -y catch2
+          sudo apt-get install ninja-build
+
+      # - name: Install Catch2
+      #   run:
+      #     sudo apt-get install -y catch2
 
       # - name: Cache external dependencies
       #   id: cache-external
