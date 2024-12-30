@@ -35,19 +35,24 @@ jobs:
       - name: Install Ninja
         run: sudo apt-get install ninja-build
 
-      - name: Cache external dependencies
-        id: cache-external
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-external
-        with:
-          path: ${{ github.workspace }}/.external
-          key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-external-
+      - name: Install Catch2
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y catch2
+
+      # - name: Cache external dependencies
+      #   id: cache-external
+      #   uses: actions/cache@v3
+      #   env:
+      #     cache-name: cache-external
+      #   with:
+      #     path: ${{ github.workspace }}/.external
+      #     key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-external-
       
-      - name: Create external directory
-        run: mkdir -p ${{github.workspace}}/.external
+      # - name: Create external directory
+      #   run: mkdir -p ${{github.workspace}}/.external
 
       - name: Configure CMake
         # if: steps.cache-external.outputs.cache-hit == 'true'
