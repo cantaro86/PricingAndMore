@@ -43,6 +43,7 @@ TEST_CASE_METHOD(OptionFixture, "MC_EU Parallel Execution") {
 
     int threads_used = pricer.getNumThreadsUsed();
     int max_threads = omp_get_max_threads();
-    REQUIRE(threads_used ==
-            max_threads); // Ensure that the number of threads used is equal to the maximum
+
+    // Ensure that the number of threads used is equal to the maximum
+    REQUIRE(threads_used == max_threads);
 }
