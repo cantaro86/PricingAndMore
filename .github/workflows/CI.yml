@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: CI
 
 jobs:
@@ -33,38 +32,36 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Ninja
+        run: sudo apt-get install ninja-build
+
+      - name: Create external directory
+        run: mkdir -p ${{ github.workspace }}/.external
+
+      - name: Cache Catch2 installation
+        id: cache-catch2
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.external/catch2
+          key: ${{ runner.os }}-catch2-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-catch2-
+
+      - name: Install Catch2
+        if: steps.cache-catch2.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install ninja-build
-
-      # - name: Install Catch2
-      #   run:
-      #     sudo apt-get install -y catch2
-
-      # - name: Cache external dependencies
-      #   id: cache-external
-      #   uses: actions/cache@v3
-      #   env:
-      #     cache-name: cache-external
-      #   with:
-      #     path: ${{ github.workspace }}/.external
-      #     key: ${{ runner.os }}-external-${{ hashFiles('**/CMakeLists.txt') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-external-
-      
-      # - name: Create external directory
-      #   run: mkdir -p ${{github.workspace}}/.external
+          mkdir -p ${{ github.workspace }}/.external/catch2
+          git clone https://github.com/catchorg/Catch2.git ${{ github.workspace }}/.external/catch2
+          cd ${{ github.workspace }}/.external/catch2
+          cmake -Bbuild -H. -DBUILD_TESTING=OFF
+          cmake --build build/ --target install
 
       - name: Configure CMake
-        # if: steps.cache-external.outputs.cache-hit == 'true'
-        run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} 
-             # -DFETCHCONTENT_BASE_DIR=${{github.workspace}}/.external
+        run: cmake -B ${{ github.workspace }}/build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_PREFIX_PATH=${{ github.workspace }}/.external/catch2
              # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
       
       - name: Build
-        # if: steps.cache-external.outputs.cache-hit == 'true'
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -j4 
+        run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }} -j4 
 
       - name: Run tests
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+        working-directory: ${{ github.workspace }}/build
+        run: ctest -C ${{ env.BUILD_TYPE }} --output-on-failure
