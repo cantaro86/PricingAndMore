@@ -67,7 +67,11 @@
         "system_error": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "condition_variable": "cpp",
+        "print": "cpp",
+        "span": "cpp",
+        "thread": "cpp"
     },
     "cmake.defaultVariants": {
         "buildType": {

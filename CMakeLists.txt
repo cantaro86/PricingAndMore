@@ -52,12 +52,18 @@ if (NOT Catch2_FOUND)
     FetchContent_Declare(
         catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG v3.7.1
+        GIT_TAG v3.8.0
     )
     FetchContent_MakeAvailable(catch2)
     message(STATUS "Catch2 install path: ${catch2_SOURCE_DIR}")
 else()
     message(STATUS "Catch2 FOUND at ${Catch2_DIR}")
+endif()
+
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+    # target_link_libraries(Fib OpenMP::OpenMP_CXX)
 endif()
 
 enable_testing()

@@ -3,7 +3,10 @@ Created on Jul 17 2024
 @author: Nicola Cantarutti
 */
 
+// export OMP_NUM_THREADS=36
+
 #include "BinaryPricer.hpp"
+// #include <omp.h>
 
 int main() {
     double strike = 100.0;
@@ -14,6 +17,19 @@ int main() {
     BinaryPricer pricer(strike, maturity, rate, volatility);
 
     double spot = 100.0; // spot price
+
+    int num_threads = omp_get_max_threads(); // Get total number of threads
+    std::cout << "Number of threads: " << num_threads << std::endl;
+
+#pragma omp parallel
+    {
+#pragma omp single
+        {
+            int num_threads = omp_get_num_threads(); // Get number of threads in the parallel
+                                                     // region, but print only once.
+            std::cout << "Number of threads: " << num_threads << std::endl;
+        }
+    }
 
     try {
         std::cout << "European:" << std::endl;
