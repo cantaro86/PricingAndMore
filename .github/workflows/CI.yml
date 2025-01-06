@@ -40,7 +40,9 @@ jobs:
       - name: Set OMP_NUM_THREADS
         run: |
           echo "OMP_NUM_THREADS=4" >> $GITHUB_ENV
-          echo "OMP_NUM_THREADS=$OMP_NUM_THREADS"
+          
+      - name: Print the variable
+        run: echo "OMP_NUM_THREADS=${{ env.YOUR_VARIABLE_NAME }}"
 
       - name: Create external directory
         run: mkdir -p ${{ github.workspace }}/.catch2_install_dir
