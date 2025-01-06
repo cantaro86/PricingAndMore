@@ -35,13 +35,13 @@ jobs:
         run: sudo apt-get install ninja-build
 
       - name: Create external directory
-        run: mkdir -p ${{ github.workspace }}/.external
+        run: mkdir -p ${{ github.workspace }}/.catch2_install_dir
 
-      - name: Cache Catch2 installation
+      - name: Create a cache for Catch2
         id: cache-catch2
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/.external/catch2
+          path: ${{ github.workspace }}/.catch2_install_dir
           key: ${{ runner.os }}-catch2-${{ hashFiles('**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-catch2-
@@ -49,14 +49,13 @@ jobs:
       - name: Install Catch2
         if: steps.cache-catch2.outputs.cache-hit != 'true'
         run: |
-          mkdir -p ${{ github.workspace }}/.external/catch2
-          git clone https://github.com/catchorg/Catch2.git ${{ github.workspace }}/.external/catch2
-          cd ${{ github.workspace }}/.external/catch2
-          cmake -Bbuild -H. -DBUILD_TESTING=OFF
+          git clone https://github.com/catchorg/Catch2.git
+          cd Catch2
+          cmake -Bbuild -H. -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/.catch2_install_dir
           cmake --build build/ --target install
 
       - name: Configure CMake
-        run: cmake -B ${{ github.workspace }}/build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_PREFIX_PATH=${{ github.workspace }}/.external/catch2
+        run: cmake -B ${{ github.workspace }}/build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_PREFIX_PATH=${{ github.workspace }}/.catch2_install_dir
              # -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
       
       - name: Build
