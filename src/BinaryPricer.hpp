@@ -7,6 +7,7 @@ Created on Jul 17 2024
 #define BINARYPRICER_HPP
 
 #include <iostream>
+#include <omp.h>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -24,11 +25,12 @@ class BinaryPricer {
         : K(strike), T(maturity), r(rate), sig(volatility) {}
 
     double price(double spot, std::string method, std::string type, std::string expiry);
+    int getNumThreadsUsed() const { return num_threads_used; }
 
   private:
     // Pricers with different numerical methods
     double closed_formula(double S0, std::string type) const;
-    double MC_EU(double S0, std::string type, int num_simulations = 10000000,
+    double MC_EU(double S0, std::string type, int num_simulations = 50000000,
                  unsigned int seed = 12345) const;
     double MC_AM(double S0, std::string type, int numPaths = 5000, int numSteps = 10000,
                  unsigned int seed = 54321);
@@ -59,6 +61,7 @@ class BinaryPricer {
     double T;   // maturity time
     double r;   // interest rate.
     double sig; // volatility
+    mutable int num_threads_used = 0; // Number of threads used
 };
 
 #endif // BINARYPRICER_HPP

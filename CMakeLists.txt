@@ -60,6 +60,12 @@ else()
     message(STATUS "Catch2 FOUND at ${Catch2_DIR}")
 endif()
 
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+    # target_link_libraries(Fib OpenMP::OpenMP_CXX)
+endif()
+
 enable_testing()
 include(CTest)
 

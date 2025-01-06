@@ -61,23 +61,41 @@ double BinaryPricer::closed_formula(double S0, std::string type) const {
 double BinaryPricer::MC_EU(double S0, std::string type, int num_simulations,
                            unsigned int seed) const {
 
-    std::mt19937 gen(seed);
-    std::normal_distribution<double> N(0.0, 1.0);
-
     double payoff_sum = 0.0;
-    for (int i = 0; i < num_simulations; ++i) {
-        double S_T = S0 * std::exp((r - 0.5 * sig * sig) * T + sig * std::sqrt(T) * N(gen));
-        if (type == "call") {
-            payoff_sum += (S_T > K) ? 1.0 : 0.0;
+    int num_threads = 0;
+
+#pragma omp parallel
+    {
+#pragma omp atomic
+        num_threads++;
+
+        std::mt19937 gen(seed + omp_get_thread_num());
+        std::normal_distribution<double> N(0.0, 1.0);
+        double local_payoff_sum = 0.0;
+
+#pragma omp for
+        for (int i = 0; i < num_simulations; ++i) {
+            double S_T = S0 * std::exp((r - 0.5 * sig * sig) * T + sig * std::sqrt(T) * N(gen));
+            if (type == "call") {
+                local_payoff_sum += (S_T > K) ? 1.0 : 0.0;
+            }
+            else {
+                local_payoff_sum += (S_T <= K) ? 1.0 : 0.0;
+            }
         }
-        else {
-            payoff_sum += (S_T <= K) ? 1.0 : 0.0;
-        }
+
+#pragma omp atomic
+        payoff_sum += local_payoff_sum;
     }
+
     double payoff_mean = payoff_sum / num_simulations;
     double price = std::exp(-r * T) * payoff_mean;
     // double std_err = std::exp(-r * T) * std::sqrt(payoff_mean * (1 - payoff_mean)) /
     // std::sqrt(num_simulations);
+
+    // Store the number of threads used for testing purposes
+    this->num_threads_used = num_threads; // member variables of the class
+
     return price;
 }
 
