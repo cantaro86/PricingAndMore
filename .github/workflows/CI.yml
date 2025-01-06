@@ -34,6 +34,14 @@ jobs:
       - name: Install Ninja
         run: sudo apt-get install ninja-build
 
+      - name: Install libomp
+        run: sudo apt-get install libomp-dev
+
+      - name: Set OMP_NUM_THREADS
+        run: |
+          echo "OMP_NUM_THREADS=4" >> $GITHUB_ENV
+          echo $OMP_NUM_THREADS
+
       - name: Create external directory
         run: mkdir -p ${{ github.workspace }}/.catch2_install_dir
 
