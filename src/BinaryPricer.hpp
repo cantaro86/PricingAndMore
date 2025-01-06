@@ -25,7 +25,9 @@ class BinaryPricer {
         : K(strike), T(maturity), r(rate), sig(volatility) {}
 
     double price(double spot, std::string method, std::string type, std::string expiry);
-    int getNumThreadsUsed() const { return num_threads_used; }
+    int getNumThreadsUsed() const {
+        return num_threads_used;
+    }
 
   private:
     // Pricers with different numerical methods
@@ -57,10 +59,10 @@ class BinaryPricer {
     // Generate a non uniform and symmetric mesh with more nodes around the center.
     std::vector<double> generate_mesh(int N, double L, double alpha = 4);
 
-    double K;   // strike price
-    double T;   // maturity time
-    double r;   // interest rate.
-    double sig; // volatility
+    double K;                         // strike price
+    double T;                         // maturity time
+    double r;                         // interest rate.
+    double sig;                       // volatility
     mutable int num_threads_used = 0; // Number of threads used
 };
 
