@@ -69,7 +69,8 @@ double BinaryPricer::MC_EU(double S0, std::string type, int num_simulations,
 #pragma omp atomic
         num_threads++;
 
-        std::mt19937 gen(seed + omp_get_thread_num());
+        std::mt19937 gen(seed +
+                         omp_get_thread_num()); // in the sum, int is promoted to unsigned int
         std::normal_distribution<double> N(0.0, 1.0);
         double local_payoff_sum = 0.0;
 
@@ -433,11 +434,14 @@ std::vector<std::vector<double>> BinaryPricer::generatePricePaths(double S0, int
     std::normal_distribution<double> distribution(0.0, 1.0);
 
     double dt = T / numSteps;
+    double drift = (r - 0.5 * sig * sig) * dt;
+    double ddt = sig * std::sqrt(dt);
+
     for (int i = 0; i < numPaths; ++i) {
         paths[i][0] = S0;
         for (int j = 1; j <= numSteps; ++j) {
-            double dW = distribution(generator) * std::sqrt(dt);
-            paths[i][j] = paths[i][j - 1] * std::exp((r - 0.5 * sig * sig) * dt + sig * dW);
+            double dW = distribution(generator) * ddt;
+            paths[i][j] = paths[i][j - 1] * std::exp(drift + dW);
         }
     }
     return paths;
